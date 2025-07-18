@@ -4,7 +4,7 @@ import { useState } from 'react';
 export default function Appointment() {
   const [form, setForm] = useState({ name: '', date: '', phone: '' });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert(`Appointment booked for ${form.name} on ${form.date}`);
     setForm({ name: '', date: '', phone: '' });
