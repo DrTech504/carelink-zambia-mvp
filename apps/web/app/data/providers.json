@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Dr. Mwamba", "specialty": "Cardiology", "location": "Lusaka", "phone": "+260 97 123 4567" },
+  { "id": 2, "name": "Nurse Chanda", "specialty": "Pediatrics", "location": "Kitwe", "phone": "+260 97 987 6543" },
+  { "id": 3, "name": "Dr. Phiri", "specialty": "Dermatology", "location": "Ndola", "phone": "+260 96 555 1212" }
+]
