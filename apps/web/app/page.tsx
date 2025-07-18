@@ -6,7 +6,7 @@ import providers from './data/providers.json';
 import { supabase } from './lib/supabase';
 
 export default function Home() {
-  const [filter, setFilter] = useState('');
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [appointments, setAppointments] = useState<any[]>([]);
 
   useEffect(() => {
