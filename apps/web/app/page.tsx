@@ -1,17 +1,15 @@
-'use client';
+import Link from 'next/link';
 import { useState } from 'react';
-import providers from './data/providers.json';
 
 export default function Home() {
   const [filter, setFilter] = useState('');
-
-  const filtered = providers.filter(p =>
+  const filtered = require('./data/providers.json').filter(p =>
     p.name.toLowerCase().includes(filter.toLowerCase()) ||
     p.specialty.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
+    <main className="p-6 max-w-md mx-auto">
       <h1 className="text-3xl font-bold mb-4">Carelink Zambia</h1>
       <input
         placeholder="Search by name or specialty"
@@ -31,12 +29,11 @@ export default function Home() {
           </div>
         ))}
       </div>
-    </main>
-  );
-}
-
       <div className="mt-6">
         <Link href="/appointment" className="bg-blue-600 text-white px-4 py-2 rounded">
           Book Appointment
         </Link>
       </div>
+    </main>
+  );
+}
