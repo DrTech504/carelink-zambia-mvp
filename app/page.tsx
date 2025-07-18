@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import type { Appointment } from "./types/appointment";
 import { useState } from 'react';
 import providers from './data/providers.json';
 
