@@ -34,3 +34,9 @@ export default function Home() {
     </main>
   );
 }
+
+      <div className="mt-6">
+        <Link href="/appointment" className="bg-blue-600 text-white px-4 py-2 rounded">
+          Book Appointment
+        </Link>
+      </div>
