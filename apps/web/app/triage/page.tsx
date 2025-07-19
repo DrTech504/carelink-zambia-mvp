@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { sendEmail } from '@/lib/email';
+import { supabase } from '../lib/supabase';
+import { sendEmail } from '../lib/email';
 
 export default function Triage() {
   const [symptoms, setSymptoms] = useState('');
