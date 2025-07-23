@@ -4,14 +4,12 @@ import { createClient } from '@/app/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { SubmitButton } from '../login/submit-button'
 
-// Define the correct type for Next.js page props
-interface PageProps {
-  searchParams: {
-    message: string;
-  };
+// Use the officially recommended type for searchParams
+interface SignupProps {
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function Signup({ searchParams }: PageProps) {
+export default function Signup({ searchParams }: SignupProps) {
   const signUp = async (formData: FormData) => {
     'use server'
 
