@@ -1,52 +1,55 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import BookingCalendar from '../components/BookingCalendar';   // ← correct relative path
-import type { Appointment } from '../types/appointment';
+'use client'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
+import BookingCalendar from '../components/BookingCalendar';
+import { createClient } from '@/app/lib/supabase/client';
 
-export default function Appointment() {
-  const [form, setForm] = useState({ name: '', phone: '' });
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [booked, setBooked] = useState<string[]>([]);
+export default function AppointmentPage() {
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [form, setForm] = useState({ name: '', email: '' });
+    const [booked, setBooked] = useState<string[]>([]); // Example: ['2024-07-25']
+    const supabase = createClient();
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase.from('appointments').select('date');
-      setBooked((data || []).map(d => d.date));
-    })();
-  }, []);
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (!selectedDate) {
+            alert('Please select a date');
+            return;
+        }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedDate) return alert('Pick a date first');
-    if (booked.includes(selectedDate.toISOString().split('T')[0])) return alert('Slot taken');
-    const { error } = await supabase.from('appointments').insert([{ ...form, date: selectedDate.toISOString().split('T')[0] }]);
-    if (error) alert(error.message);
-    else {
-      alert('Appointment booked!');
-      setBooked([...booked, selectedDate.toISOString().split('T')[0]]);
-      setForm({ name: '', phone: '' });
-      setSelectedDate(null);
-    }
-  };
+        const { data, error } = await supabase.from('appointments').insert([
+            {
+                name: form.name,
+                email: form.email,
+                date: selectedDate.toISOString(),
+            },
+        ]);
 
-  return (
-    <main className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Book Appointment (Calendar)</h1>
-      <BookingCalendar onSelectSlot={setSelectedDate} booked={booked} />
-      {selectedDate && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input placeholder="Full name" className="border p-2 w-full" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
-          <input placeholder="Phone" className="border p-2 w-full" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} required />
-          <p className="text-sm">Selected: {selectedDate.toDateString()}</p>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded">Book</button>
-        </form>
-      )}
-    </main>
-  );
+        if (error) {
+            alert('Failed to book appointment: ' + error.message);
+        } else {
+            alert('Appointment booked successfully!');
+            setForm({ name: '', email: '' });
+            setSelectedDate(null);
+        }
+    };
+
+    return (
+        <div className="w-full max-w-2xl mx-auto p-8">
+            <main className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-md">
+                <h1 className="text-2xl font-bold mb-4 text-center">Book Appointment</h1>
+                <BookingCalendar onSelectSlot={setSelectedDate} booked={booked} />
+                {selectedDate && (
+                    <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+                        <h2 className="text-lg font-semibold">Confirm details for: {selectedDate.toDateString()}</h2>
+                        <input placeholder="Full name" className="border p-2 w-full rounded-md" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+                        <input placeholder="Email" type="email" className="border p-2 w-full rounded-md" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+                        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                            Confirm Booking
+                        </button>
+                    </form>
+                )}
+            </main>
+        </div>
+    );
 }
