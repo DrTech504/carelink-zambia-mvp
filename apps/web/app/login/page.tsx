@@ -1,6 +1,5 @@
 // This is the main login page for the application.
 import Link from 'next/link'
-import { headers } from 'next/headers'
 import { createClient } from '@/app/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { SubmitButton } from './submit-button'
@@ -48,7 +47,7 @@ export default function Login({ searchParams }: { searchParams: { message: strin
         Back
       </Link>
 
-      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground" action={signIn}>
         <label className="text-md" htmlFor="email">
           Email
         </label>

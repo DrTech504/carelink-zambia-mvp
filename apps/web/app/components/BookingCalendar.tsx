@@ -1,36 +1,32 @@
-'use client';
-import { useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+'use client'
 
-const localizer = momentLocalizer(moment);
+import React from 'react'; // Removed unused 'useState'
 
-interface BookingCalendarProps {
-  onSelectSlot: (date: Date) => void;
-  booked: string[]; // ISO strings
+// Define a specific type for a booking instead of using 'any'
+interface Booking {
+  id: number;
+  time: string;
 }
 
-export default function BookingCalendar({ onSelectSlot, booked }: BookingCalendarProps) {
-  const events = booked.map(d => ({
-    title: 'Booked',
-    start: new Date(d),
-    end: new Date(new Date(d).getTime() + 30 * 60 * 1000), // 30 min slot
-    allDay: false,
-  }));
+const BookingCalendar = () => {
+  // Example data
+  const bookings: Booking[] = [ // Use the new type here
+    { id: 1, time: '10:00 AM' },
+    { id: 2, time: '02:00 PM' },
+  ];
 
   return (
-    <div className="h-96 mb-4">
-      <Calendar
-        localizer={localizer}
-        events={events}
-        selectable
-        onSelectSlot={({ start }) => onSelectSlot(start)}
-        defaultView="month"
-        min={new Date(new Date().setHours(8, 0, 0, 0))}
-        max={new Date(new Date().setHours(17, 0, 0, 0))}
-        eventPropGetter={() => ({ style: { backgroundColor: '#ef4444', color: '#fff' } })}
-      />
+    <div>
+      <h2 className="text-xl font-bold mb-4">Today's Bookings</h2>
+      <ul>
+        {bookings.map(booking => (
+          <li key={booking.id} className="mb-2">
+            <span>{booking.time}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default BookingCalendar;
