@@ -4,7 +4,14 @@ import { createClient } from '@/app/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { SubmitButton } from '../login/submit-button'
 
-export default function Signup({ searchParams }: { searchParams: { message: string } }) {
+// Define the correct type for Next.js page props
+interface PageProps {
+  searchParams: {
+    message: string;
+  };
+}
+
+export default function Signup({ searchParams }: PageProps) {
   const signUp = async (formData: FormData) => {
     'use server'
 
@@ -15,12 +22,10 @@ export default function Signup({ searchParams }: { searchParams: { message: stri
     const role = formData.get('role') as 'doctor' | 'clinic' | 'officer' | 'patient';
     const supabase = createClient()
 
-    // Sign up the user in the auth schema
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        // This line is the fix. It constructs the URL more reliably.
         emailRedirectTo: `${origin}/auth/callback`,
       },
     })
@@ -29,9 +34,8 @@ export default function Signup({ searchParams }: { searchParams: { message: stri
       return redirect('/signup?message=Could not authenticate user')
     }
 
-    // Insert the user's profile into the public users table
     const { error: profileError } = await supabase.from('users').insert({
-        id: authData.user?.id, // Use the ID from the auth user
+        id: authData.user?.id,
         email,
         full_name: fullName,
         role,
@@ -39,7 +43,6 @@ export default function Signup({ searchParams }: { searchParams: { message: stri
 
     if (profileError) {
         console.error('Error creating profile:', profileError)
-        // Optional: You might want to delete the auth user if profile creation fails
         return redirect('/signup?message=Could not create user profile. Please contact support.')
     }
 
