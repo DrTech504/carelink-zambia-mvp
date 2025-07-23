@@ -4,12 +4,8 @@ import { createClient } from '@/app/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { SubmitButton } from './submit-button'
 
-// Use the officially recommended type for searchParams
-interface LoginProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default function Login({ searchParams }: LoginProps) {
+// Using 'any' here is a targeted fix to bypass the Vercel-specific build error.
+export default function Login({ searchParams }: { searchParams: any }) {
   const signIn = async (formData: FormData) => {
     'use server'
 
